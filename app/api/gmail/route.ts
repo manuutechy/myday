@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { getImportantEmails } from "@/lib/google";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await auth();

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendPushNotification } from "@/lib/push";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   const session = await auth();
