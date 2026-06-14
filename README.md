@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Myday Routine PWA
 
-## Getting Started
+Myday is a personal productivity progressive web application (PWA) built specifically for founder and developer Manuu. It integrates Google Calendar, Gmail, custom Sales Pipeline tracker, Habit streak metrics, Pomodoro Focus tools, and daily routine configuration in Nairobi (GMT+3).
 
-First, run the development server:
+---
 
+## Technical Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **Auth:** NextAuth.js v5 (Auth.js) with Google Provider
+- **Database:** Prisma ORM with local SQLite support
+- **State Store:** Zustand
+- **PWA Tooling:** `next-pwa` (Workbox)
+- **Notification API:** Web Push Protocol (`web-push` library)
+
+---
+
+## Local Setup & Development
+
+### 1. Clone & Install Dependencies
+Navigate into the workspace and run installation:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment Variables
+Create a `.env.local` file in the root directory (Prisma also reads `.env` for migrations):
+```bash
+# Copy template variables
+cp .env.local.example .env.local
+```
+Make sure to replace placeholder variables with your Google Cloud Client credentials and generate a NextAuth secret:
+```bash
+# Generate secret key
+openssl rand -hex 32
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Database Migration & Seeding
+Initialize the SQLite database schema and pre-populate mock user habits:
+```bash
+npx prisma migrate dev --name init
+npx prisma db seed
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run Development Server
+Start the local Next.js dev server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Web Push VAPID Generation
+To generate your own VAPID keys for push notifications, run the following in your shell:
+```bash
+npx web-push generate-vapid-keys
+```
+Update your `.env.local` with the returned keys.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## PWA Installation
+To verify PWA installation locally:
+1. Run `npm run build && npm run start` (since service worker caching is disabled in development by default in `next.config.mjs`).
+2. Open Chrome DevTools and check the **Application** > **Service Workers** dashboard.
+3. Click **Add to Home Screen** inside Chrome or Safari to install Myday on your device.
